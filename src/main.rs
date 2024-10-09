@@ -37,8 +37,9 @@ struct Args {
     json_out: bool,
 }
 
-use cpe_explorer::cpedict::{parse_cpe_node, CVE_CPE23_VALID_REGEX_STR};
+use cpe_explorer::cpedict::{parse_cpe_node};
 use cpe_explorer::nvdarchive;
+use cpe_explorer::CVE_CPE23_VALID_REGEX_STR;
 
 fn main() {
     let cpe23_valid_regex = Regex::new(CVE_CPE23_VALID_REGEX_STR).unwrap();
