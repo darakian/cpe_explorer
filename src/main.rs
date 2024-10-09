@@ -37,7 +37,7 @@ struct Args {
     json_out: bool,
 }
 
-use cpe_explorer::cpedict::{parse_cpe_node, CpeEntry, CVE_CPE23_VALID_REGEX_STR};
+use cpe_explorer::cpedict::{parse_cpe_node, CVE_CPE23_VALID_REGEX_STR};
 use cpe_explorer::nvdarchive;
 
 fn main() {
@@ -121,7 +121,7 @@ fn main() {
     }
 
     match args.json_out {
-        true => {output_json(results)},
+        true => {println!("{}", json!((results)))},
         false => {
             for res in results.iter() {
                 println!("Matching cpe: {}", res.get_cpe23_name());
@@ -134,31 +134,27 @@ fn main() {
     }
 }
 
-fn output_json(cpe_entries: Vec<&CpeEntry>) {
-    println!("{}", json!(cpe_entries));
-}
+// fn get_deprecated_entries(cpe_entries: &Vec<CpeEntry>) -> Vec<&CpeEntry> {
+//     cpe_entries.par_iter()
+//         .filter(|e| e.is_deprecated())
+//         .collect()
+// }
 
-fn get_deprecated_entries(cpe_entries: &Vec<CpeEntry>) -> Vec<&CpeEntry> {
-    cpe_entries.par_iter()
-        .filter(|e| e.is_deprecated())
-        .collect()
-}
-
-fn resolve_deprecation_chain(cpe_entry: &CpeEntry, all_entries: &Vec<CpeEntry>) {
-    let og_names = cpe_entry.get_names();
-    match cpe_entry.deprecated_by() {
-        None => {return},
-        Some(n) => {
-            all_entries.par_iter().for_each(|entry| {
-                if entry.has_name(n) && entry.is_deprecated() {
-                    println!("OG names: {:?}", og_names);
-                    println!("Deprecated_by: {:?}", entry.get_names());
-                    println!("Is deprecated: {:?}", entry.is_deprecated()); //Always false as of 28th Sept 2024
-                }
-            })
-        }
-    }
-}
+// fn resolve_deprecation_chain(cpe_entry: &CpeEntry, all_entries: &Vec<CpeEntry>) {
+//     let og_names = cpe_entry.get_names();
+//     match cpe_entry.deprecated_by() {
+//         None => {return},
+//         Some(n) => {
+//             all_entries.par_iter().for_each(|entry| {
+//                 if entry.has_name(n) && entry.is_deprecated() {
+//                     println!("OG names: {:?}", og_names);
+//                     println!("Deprecated_by: {:?}", entry.get_names());
+//                     println!("Is deprecated: {:?}", entry.is_deprecated()); //Always false as of 28th Sept 2024
+//                 }
+//             })
+//         }
+//     }
+// }
 
 
 
