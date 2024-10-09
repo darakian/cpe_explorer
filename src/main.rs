@@ -1,4 +1,5 @@
 use std::fs;
+use std::path::Path;
 use roxmltree;
 use rayon::prelude::*;
 use clap::Parser;
@@ -35,6 +36,7 @@ struct Args {
 }
 
 use cpe_explorer::cpedict::{parse_cpe_node, CpeEntry, CVE_CPE23_VALID_REGEX_STR};
+use cpe_explorer::nvdarchive;
 
 fn main() {
     let cpe23_valid_regex = Regex::new(CVE_CPE23_VALID_REGEX_STR).unwrap();
@@ -42,9 +44,11 @@ fn main() {
     let args = Args::parse();
     
     //Read in XML
-    let input_xml_file = args.dict;
-    let raw_xml = fs::read_to_string(input_xml_file)
-                .expect("could not read input file");
+    let input_xml_file = Path::new(&args.dict);
+    let raw_xml = nvdarchive::decompress_or_return(input_xml_file)
+        .expect("could not read input file");
+    // let raw_xml = fs::read_to_string(input_xml_file)
+    //             .expect("could not read input file");
     let cpe_xml_doc = roxmltree::Document::parse(&raw_xml).expect("could not parse input xml");
     
     let cpe_list = cpe_xml_doc.root_element();
