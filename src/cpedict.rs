@@ -89,7 +89,7 @@ fn parse_cpe23(cpe23_node: roxmltree::Node) -> Cpe23Entry {
 }
 
 // Handle all three cases of NVD dict (gz, zip, or decompressed xml)
-pub fn decompress_or_return(cpe_dict_path: &Path) -> Result<String, std::io::Error> {
+pub fn get_xml_as_string_from_path(cpe_dict_path: &Path) -> Result<String, std::io::Error> {
     match cpe_dict_path.extension().and_then(OsStr::to_str) {
         Some("gz") => {
             let data = fs::read(cpe_dict_path)?;

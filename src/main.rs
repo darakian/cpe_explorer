@@ -37,7 +37,7 @@ struct Args {
     json_out: bool,
 }
 
-use cpe_explorer::cpedict::{parse_cpe_node, decompress_or_return};
+use cpe_explorer::cpedict::{parse_cpe_node, get_xml_as_string_from_path};
 use cpe_explorer::CVE_CPE23_VALID_REGEX_STR;
 
 fn main() {
@@ -47,7 +47,7 @@ fn main() {
     
     //Read in XML
     let input_xml_file = Path::new(&args.dict);
-    let raw_xml = decompress_or_return(input_xml_file)
+    let raw_xml = get_xml_as_string_from_path(input_xml_file)
         .expect("could not read input file");
     // let raw_xml = fs::read_to_string(input_xml_file)
     //             .expect("could not read input file");
