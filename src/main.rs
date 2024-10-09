@@ -13,10 +13,6 @@ struct Args {
     #[arg(short, long)]
     dict: String,
 
-    // Output as json
-    #[arg(short, long)]
-    json_out: Option<bool>,
-
     // Compress versions
     #[arg(short='c', long, action)]
     compress_versions: bool,
@@ -29,9 +25,13 @@ struct Args {
     #[arg(short, long)]
     product: Option<String>,
 
-    // Check cpe23 against nvd's regex
-    #[arg(short='p', long)]
-    valid_cpe23: Option<bool>,
+    // Check cpe23 passes nvd's regex
+    #[arg(short='r', long, action)]
+    validate_cpe23: bool,
+
+    // Output as json
+    #[arg(short, long, action)]
+    json_out: bool,
 }
 
 use cpe_explorer::cpedict::{parse_cpe_node, CpeEntry, CVE_CPE23_VALID_REGEX_STR};
@@ -71,16 +71,16 @@ fn main() {
     //     }
     // }
 
-    match args.valid_cpe23 {
-        Some(false) => {
-            cpe_entries.iter()
-                .filter(|element| cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==false)
-                .for_each(|element| {
-                println!("{}", element.get_cpe23_name());
-            });
-        },
-        _ => {}
-    };
+    // match args.validate_cpe23 {
+    //     Some(false) => {
+    //         cpe_entries.iter()
+    //             .filter(|element| cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==false)
+    //             .for_each(|element| {
+    //             println!("{}", element.get_cpe23_name());
+    //         });
+    //     },
+    //     _ => {}
+    // };
 
 
     let mut results: Vec<_> = match (args.vendor, args.product) {
@@ -114,14 +114,17 @@ fn main() {
         false => {},
     }
 
-
-    for res in results.iter() {
-        println!("Matching cpe: {:?}", res.get_cpe23_name());
-    }
-
     match args.json_out {
-        Some(true) => {output_json(cpe_entries)},
-        _ => {},
+        true => {output_json(cpe_entries)},
+        false => {
+            for res in results.iter() {
+                println!("Matching cpe: {}", res.get_cpe23_name());
+                match args.validate_cpe23 {
+                    true => {println!("\tPasses regex validation: {}", cpe23_valid_regex.is_match(res.get_cpe23_name().as_str()));}
+                    false => {}
+                }
+            }
+        },
     }
 }
 
