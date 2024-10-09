@@ -14,23 +14,23 @@ struct Args {
     dict: String,
 
     // Compress versions
-    #[arg(short='c', long, action)]
+    #[arg(short='c', long, action, help="Only show unqiue product:vendor combinations")]
     compress_versions: bool,
 
     // Vendor name to filter by
-    #[arg(short, long)]
+    #[arg(short, long, help="Vendor name to filter on. Lowercase only.")]
     vendor: Option<String>,
 
     // Product name to filter by
-    #[arg(short, long)]
+    #[arg(short, long, help="Product name to filter on. Lowercase only.")]
     product: Option<String>,
 
     // Check cpe23 passes nvd's regex
-    #[arg(short='r', long, action)]
+    #[arg(short='r', long, action, help="Validate cpe strings against NVD's validation regex")]
     validate_cpe23: bool,
 
     // Output as json
-    #[arg(short, long, action)]
+    #[arg(short, long, action, help="Export cpes in json. Ignores regex validation at the moment")]
     json_out: bool,
 }
 
