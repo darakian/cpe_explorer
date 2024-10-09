@@ -119,7 +119,7 @@ fn main() {
     }
 
     match args.json_out {
-        true => {output_json(cpe_entries)},
+        true => {output_json(results)},
         false => {
             for res in results.iter() {
                 println!("Matching cpe: {}", res.get_cpe23_name());
@@ -132,7 +132,7 @@ fn main() {
     }
 }
 
-fn output_json(cpe_entries: Vec<CpeEntry>) {
+fn output_json(cpe_entries: Vec<&CpeEntry>) {
     println!("{}", json!(cpe_entries));
 }
 
