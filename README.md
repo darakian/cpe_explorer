@@ -38,3 +38,4 @@ Matching cpe: "cpe:2.3:a:palm:blazer:4.2:*:*:*:*:*:*:*"
 Matching cpe: "cpe:2.3:a:palm:blazer:4.3:*:*:*:*:*:*:*"
 Matching cpe: "cpe:2.3:a:palm:blazer:4.5:*:*:*:*:*:*:*"
 ```
+The `-c` flag "compresses" versions which can simplify exploration of product/vendor combinations. For the purposes of this flag everthing after the product field is treated as one long version string (becasue it kind of is). At the moment no consideration is given as to which version string to display to the user in compression mode.
