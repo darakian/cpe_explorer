@@ -22,6 +22,9 @@ struct Args {
     #[arg(short, long, help="Product name to filter on. Lowercase only.")]
     product: Option<String>,
 
+    //TODO: enable regex and deprecation status as filterables
+    //Need to differentate print options from filter options
+
     // Compress versions
     #[arg(short='c', long, action, help="Only show unqiue product:vendor combinations")]
     compress_versions: bool,
