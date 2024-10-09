@@ -1,5 +1,6 @@
 pub mod cpedict;
 pub mod nvdarchive;
+pub mod cpestructures;
 
 // See: https://csrc.nist.gov/schema/cpe/2.3/cpe-naming_2.3.xsd
 pub static NVD_CPE23_VALID_REGEX_STR: &str = r###"cpe:2\.3:[aho\*\-](:(((\?*|\*?)([a-zA-Z0-9\-\._]|(\\[\\\*\?!"#$$%&'\(\)\+,/:;<=>@\[\]\^`\{\|}~]))+(\?*|\*?))|[\*\-])){5}(:(([a-zA-Z]{2,3}(-([a-zA-Z]{2}|[0-9]{3}))?)|[\*\-]))(:(((\?*|\*?)([a-zA-Z0-9\-\._]|(\\[\\\*\?!"#$$%&'\(\)\+,/:;<=>@\[\]\^`\{\|}~]))+(\?*|\*?))|[\*\-])){4}"###;
