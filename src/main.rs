@@ -40,8 +40,7 @@ fn main() {
     let cpe23_valid_regex = Regex::new(CVE_CPE23_VALID_REGEX_STR).unwrap();
     
     let args = Args::parse();
-    println!("{:?}", args.compress_versions);
-
+    
     //Read in XML
     let input_xml_file = args.dict;
     let raw_xml = fs::read_to_string(input_xml_file)
