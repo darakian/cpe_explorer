@@ -11,9 +11,9 @@ Usage: cpe_explorer [OPTIONS] --dict <DICT>
 
 Options:
   -d, --dict <DICT>        Path to cpe dictionary xml
-  -c, --compress-versions  Only show unqiue product:vendor combinations
   -v, --vendor <VENDOR>    Vendor name to filter on. Lowercase only.
   -p, --product <PRODUCT>  Product name to filter on. Lowercase only.
+  -c, --compress-versions  Only show unqiue product:vendor combinations
   -r, --validate-cpe23     Validate cpe strings against NVD's validation regex
   -j, --json-out           Export cpes in json. Ignores regex validation at the moment
   -h, --help               Print help

@@ -13,10 +13,6 @@ struct Args {
     #[arg(short, long)]
     dict: String,
 
-    // Compress versions
-    #[arg(short='c', long, action, help="Only show unqiue product:vendor combinations")]
-    compress_versions: bool,
-
     // Vendor name to filter by
     #[arg(short, long, help="Vendor name to filter on. Lowercase only.")]
     vendor: Option<String>,
@@ -24,6 +20,10 @@ struct Args {
     // Product name to filter by
     #[arg(short, long, help="Product name to filter on. Lowercase only.")]
     product: Option<String>,
+
+    // Compress versions
+    #[arg(short='c', long, action, help="Only show unqiue product:vendor combinations")]
+    compress_versions: bool,
 
     // Check cpe23 passes nvd's regex
     #[arg(short='r', long, action, help="Validate cpe strings against NVD's validation regex")]
