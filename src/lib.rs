@@ -1,5 +1,4 @@
 pub mod cpedict;
-pub mod nvdarchive;
 pub mod cpestructures;
 
 // See: https://csrc.nist.gov/schema/cpe/2.3/cpe-naming_2.3.xsd
