@@ -22,10 +22,12 @@ Options:
 
 Currently under active development, but it's currently most useful in getting cpe23 strings that match a given vendor and/or product.
 eg.
+filtering by vendor only
 ```
 ❯❯❯ cpe_explorer -d official-cpe-dictionary_v2.3-03102024.xml -v nist
 Matching cpe: "cpe:2.3:a:nist:hipaa_security_rule_toolkit:1.0.0.0:*:*:*:*:*:*:*"
 ```
+or by product only
 ```
 ❯❯❯ cpe_explorer -d official-cpe-dictionary_v2.3-03102024.xml -p cve-services
 Matching cpe: "cpe:2.3:a:cve:cve-services:-:*:*:*:*:*:*:*"
@@ -33,6 +35,7 @@ Matching cpe: "cpe:2.3:a:cve:cve-services:1.0.0:*:*:*:*:*:*:*"
 Matching cpe: "cpe:2.3:a:cve:cve-services:1.0.1:*:*:*:*:*:*:*"
 Matching cpe: "cpe:2.3:a:cve:cve-services:1.1.1:*:*:*:*:*:*:*"
 ```
+or both
 ```
 ❯❯❯ cpe_explorer -d official-cpe-dictionary_v2.3-03102024.xml -v palm -p blazer
 Matching cpe: "cpe:2.3:a:palm:blazer:3.0:*:*:*:*:*:*:*"
