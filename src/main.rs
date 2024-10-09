@@ -1,4 +1,3 @@
-use std::fs;
 use std::path::Path;
 use roxmltree;
 use rayon::prelude::*;
@@ -109,7 +108,7 @@ fn main() {
             }
         (_, _) => {
             cpe_entries.par_iter()
-                .filter(|element| true)
+                .filter(|_element| true)
                 .collect()
         }
     };
