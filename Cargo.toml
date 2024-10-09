@@ -2,6 +2,12 @@
 name = "cpe_explorer"
 version = "0.1.0"
 edition = "2021"
+authors = ["darakian"]
+description = "An exploration tool for the NVD cpe dict"
+readme = "README.md"
+homepage = "https://github.com/darakian/cpe_explorer"
+repository = "https://github.com/darakian/cpe_explorer"
+license-file = "LICENSE"
 
 [dependencies]
 roxmltree = "0.20.0"
