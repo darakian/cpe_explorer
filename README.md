@@ -20,7 +20,7 @@ Options:
   -V, --version            Print version
   ```
 
-Currently under active development, but it's currently most useful in getting cpe23 strings that match a given vendor and/or product.
+Under active development, but it's currently most useful in getting cpe23 strings that match a given vendor and/or product.
 eg.
 filtering by vendor only
 ```
