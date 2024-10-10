@@ -7,7 +7,7 @@ description = "An exploration tool for the NVD cpe dict"
 readme = "README.md"
 homepage = "https://github.com/darakian/cpe_explorer"
 repository = "https://github.com/darakian/cpe_explorer"
-license-file = "LICENSE"
+license = "MPL-2.0"
 
 [dependencies]
 roxmltree = "0.20.0"
