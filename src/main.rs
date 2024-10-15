@@ -33,9 +33,8 @@ struct Args {
 
     // Pick between the NVD regular expression or the CVE org one.
     #[arg(short='x', long, value_enum, default_value = "nvd", help="Choice of [\"NVD\", \"CVE\"]. Default: NVD")]
-    regex_choice: Option<CpeRegexs>,
+    regex_choice: CpeRegexs,
 
-    //TODO: enable regex and deprecation status as filterables
     //Need to differentate print options from filter options
 
     // Compress versions
@@ -50,12 +49,16 @@ struct Args {
 }
 
 use cpe_explorer::cpedict::{parse_cpe_node, get_xml_as_string_from_path};
-use cpe_explorer::CVE_CPE23_VALID_REGEX_STR;
+use cpe_explorer::{NVD_CPE23_VALID_REGEX_STR, CVE_CPE23_VALID_REGEX_STR};
 
 fn main() {
-    let cpe23_valid_regex = Regex::new(CVE_CPE23_VALID_REGEX_STR).unwrap();
-    
     let args = Args::parse();
+
+    let cpe23_valid_regex = match args.regex_choice {
+        CpeRegexs::NVD => {Regex::new(NVD_CPE23_VALID_REGEX_STR).unwrap()},
+        CpeRegexs::CVE => {Regex::new(CVE_CPE23_VALID_REGEX_STR).unwrap()},
+    };
+    
     
     //Read in XML
     let input_xml_file = Path::new(&args.dict);
