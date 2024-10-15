@@ -1,9 +1,15 @@
 use std::path::Path;
 use roxmltree;
 use rayon::prelude::*;
-use clap::Parser;
+use clap::{Parser, ValueEnum};
 use serde_json::json;
 use regex::Regex;
+
+#[derive(Debug, ValueEnum, Clone)]
+enum CpeRegexs {
+    NVD,
+    CVE,
+}
 
 
 #[derive(Parser, Debug)]
@@ -21,6 +27,14 @@ struct Args {
     #[arg(short, long, help="Product name to filter on. Lowercase only.")]
     product: Option<String>,
 
+    // Filter by regex validation
+    #[arg(short='r', long, action, help="Validate cpe strings against NVD's validation regex")]
+    validate_cpe23: bool,
+
+    // Pick between the NVD regular expression or the CVE org one.
+    #[arg(short='x', long, value_enum, help="Choice of [\"NVD\", \"CVE\"]")]
+    regex_choice: Option<CpeRegexs>,
+
     //TODO: enable regex and deprecation status as filterables
     //Need to differentate print options from filter options
 
@@ -29,8 +43,6 @@ struct Args {
     compress_versions: bool,
 
     // Check cpe23 passes nvd's regex
-    #[arg(short='r', long, action, help="Validate cpe strings against NVD's validation regex")]
-    validate_cpe23: bool,
 
     // Output as json
     #[arg(short, long, action, help="Export cpes in json. Ignores regex validation at the moment")]
