@@ -101,29 +101,42 @@ fn main() {
     // };
 
 
-    let mut results: Vec<_> = match (args.vendor, args.product) {
-        (Some(v), Some(p)) => {
-            cpe_entries.par_iter()
-                .filter(|element| element.has_vendor(&v))
-                .filter(|element| element.has_product(&p))
-                .collect()
-            }
-        (Some(v), None) => {
-            cpe_entries.par_iter()
-                .filter(|element| element.has_vendor(&v))
-                .collect()
-            }
-        (None, Some(p)) => {
-            cpe_entries.par_iter()
-                .filter(|element| element.has_product(&p))
-                .collect()
-            }
-        (_, _) => {
-            cpe_entries.par_iter()
-                .filter(|_element| true)
-                .collect()
-        }
-    };
+    // let mut results: Vec<_> = match (args.vendor, args.product) {
+    //     (Some(v), Some(p)) => {
+    //         cpe_entries.par_iter()
+    //             .filter(|element| element.has_vendor(&v))
+    //             .filter(|element| element.has_product(&p))
+    //             .collect()
+    //         }
+    //     (Some(v), None) => {
+    //         cpe_entries.par_iter()
+    //             .filter(|element| element.has_vendor(&v))
+    //             .collect()
+    //         }
+    //     (None, Some(p)) => {
+    //         cpe_entries.par_iter()
+    //             .filter(|element| element.has_product(&p))
+    //             .collect()
+    //         }
+    //     (_, _) => {
+    //         cpe_entries.par_iter()
+    //             .filter(|_element| true)
+    //             .collect()
+    //     }
+    // };
+
+    let mut results: Vec<_> = cpe_entries.par_iter()
+        .filter( |element| match &args.vendor { 
+            Some(v) => {element.has_vendor(&v)},
+            None => {true},
+        })
+        .filter( |element| match &args.product { 
+            Some(p) => {element.has_product(&p)},
+            None => {true},
+        })
+        .collect(); 
+
+
     match args.compress_versions {
         true => {
             results.sort();
