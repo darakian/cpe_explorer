@@ -16,20 +16,24 @@ enum CpeRegexs {
 #[command(version, about, long_about = None)]
 struct Args {
     /// Path to cpe dictionary xml
-    #[arg(short, long)]
+    #[arg(short='d', long)]
     dict: String,
 
     // Vendor name to filter by
-    #[arg(short, long, help="Vendor name to filter on")]
+    #[arg(short='v', long, help="Vendor name to filter on")]
     vendor: Option<String>,
 
     // Product name to filter by
-    #[arg(short, long, help="Product name to filter on")]
+    #[arg(short='p', long, help="Product name to filter on")]
     product: Option<String>,
 
     // Filter by regex validation
     #[arg(short='r', long, action, help="Validate cpe strings against NVD's validation regex")]
     validate_cpe23: Option<bool>,
+
+    // Filter by deprecation status
+    #[arg(short='n', long, action, help="Filter on deprecation status")]
+    deprecation_status: Option<bool>,
 
     // Pick between the NVD regular expression or the CVE org one.
     #[arg(short='x', long, value_enum, default_value = "nvd", help="Choice of cpe validation regex.")]
@@ -40,7 +44,7 @@ struct Args {
     compress_versions: bool,
 
     // Output as json
-    #[arg(short, long, action, help="Export cpes in json. Ignores regex validation at the moment")]
+    #[arg(short='j', long, action, help="Export cpes in json. Ignores regex validation at the moment")]
     json_out: bool,
 }
 
@@ -76,18 +80,6 @@ fn main() {
         .map(|entry| parse_cpe_node(entry))
         .collect();
 
-    // for entry in get_deprecated_entries(&cpe_entries) {
-    //     // resolve_deprecation_chain(entry, &cpe_entries)
-    //     println!("CPE: {}\nCPE23: {}", entry.get_cpe_name(), entry.get_cpe23_name());
-    //     match entry.deprecated_by() {
-    //         None => {println!("\t No replacement cpe");}
-    //         Some(n) => {
-    //             println!("\t Replaced by {}", n);
-
-    //         }
-    //     }
-    // }
-
     let mut results: Vec<_> = cpe_entries.par_iter()
         .filter( |element| match &args.vendor { 
             Some(v) => {element.has_vendor(&v.to_lowercase())},
@@ -102,7 +94,12 @@ fn main() {
             Some(false) => {cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==false},
             _ => {true} //eg. assume all values pass
         })
-        .collect(); 
+        .filter( |element| match &args.deprecation_status { 
+            Some(true) => {element.is_deprecated()},
+            Some(false) => {!element.is_deprecated()},
+            _ => {true} //eg. assume all values pass
+        })
+        .collect();
 
 
     match args.compress_versions {
@@ -127,12 +124,6 @@ fn main() {
         },
     }
 }
-
-// fn get_deprecated_entries(cpe_entries: &Vec<CpeEntry>) -> Vec<&CpeEntry> {
-//     cpe_entries.par_iter()
-//         .filter(|e| e.is_deprecated())
-//         .collect()
-// }
 
 // fn resolve_deprecation_chain(cpe_entry: &CpeEntry, all_entries: &Vec<CpeEntry>) {
 //     let og_names = cpe_entry.get_names();
