@@ -5,7 +5,7 @@ use clap::{Parser, ValueEnum};
 use serde_json::json;
 use regex::Regex;
 
-#[derive(Debug, ValueEnum, Clone)]
+#[derive(Debug, ValueEnum, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 enum CpeRegexs {
     NVD,
     CVE,
@@ -29,10 +29,10 @@ struct Args {
 
     // Filter by regex validation
     #[arg(short='r', long, action, help="Validate cpe strings against NVD's validation regex")]
-    validate_cpe23: bool,
+    validate_cpe23: Option<bool>,
 
     // Pick between the NVD regular expression or the CVE org one.
-    #[arg(short='x', long, value_enum, help="Choice of [\"NVD\", \"CVE\"]")]
+    #[arg(short='x', long, value_enum, default_value = "nvd", help="Choice of [\"NVD\", \"CVE\"]. Default: NVD")]
     regex_choice: Option<CpeRegexs>,
 
     //TODO: enable regex and deprecation status as filterables
@@ -134,6 +134,11 @@ fn main() {
             Some(p) => {element.has_product(&p)},
             None => {true},
         })
+        .filter( |element| match &args.validate_cpe23 { 
+            Some(true) => {cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==true},
+            Some(false) => {cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==false},
+            _ => {true} //eg. assume all values pass
+        })
         .collect(); 
 
 
@@ -151,8 +156,9 @@ fn main() {
             for res in results.iter() {
                 println!("Matching cpe: {}", res.get_cpe23_name());
                 match args.validate_cpe23 {
-                    true => {println!("\tPasses regex validation: {}", cpe23_valid_regex.is_match(res.get_cpe23_name().as_str()));}
-                    false => {}
+                    Some(true) => {println!("\tPasses regex validation: {}", cpe23_valid_regex.is_match(res.get_cpe23_name().as_str()));},
+                    Some(false) => {},
+                    _ => {}
                 }
             }
         },
