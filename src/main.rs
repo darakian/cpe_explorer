@@ -92,12 +92,12 @@ fn main() {
         .filter( |element| match &args.validate_cpe23 { 
             Some(true) => {cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==true},
             Some(false) => {cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==false},
-            _ => {true} //eg. assume all values pass
+            _ => {true} //eg. Ignore filter
         })
         .filter( |element| match &args.deprecation_status { 
             Some(true) => {element.is_deprecated()},
             Some(false) => {!element.is_deprecated()},
-            _ => {true} //eg. assume all values pass
+            _ => {true} //eg. Ignore filter
         })
         .collect();
 
