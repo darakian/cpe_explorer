@@ -1,9 +1,15 @@
 use std::path::Path;
 use roxmltree;
 use rayon::prelude::*;
-use clap::Parser;
+use clap::{Parser, ValueEnum};
 use serde_json::json;
 use regex::Regex;
+
+#[derive(Debug, ValueEnum, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+enum CpeRegexs {
+    NVD,
+    CVE,
+}
 
 
 #[derive(Parser, Debug)]
@@ -21,7 +27,14 @@ struct Args {
     #[arg(short, long, help="Product name to filter on. Lowercase only.")]
     product: Option<String>,
 
-    //TODO: enable regex and deprecation status as filterables
+    // Filter by regex validation
+    #[arg(short='r', long, action, help="Validate cpe strings against NVD's validation regex")]
+    validate_cpe23: Option<bool>,
+
+    // Pick between the NVD regular expression or the CVE org one.
+    #[arg(short='x', long, value_enum, default_value = "nvd", help="Choice of [\"NVD\", \"CVE\"]. Default: NVD")]
+    regex_choice: CpeRegexs,
+
     //Need to differentate print options from filter options
 
     // Compress versions
@@ -29,8 +42,6 @@ struct Args {
     compress_versions: bool,
 
     // Check cpe23 passes nvd's regex
-    #[arg(short='r', long, action, help="Validate cpe strings against NVD's validation regex")]
-    validate_cpe23: bool,
 
     // Output as json
     #[arg(short, long, action, help="Export cpes in json. Ignores regex validation at the moment")]
@@ -38,12 +49,16 @@ struct Args {
 }
 
 use cpe_explorer::cpedict::{parse_cpe_node, get_xml_as_string_from_path};
-use cpe_explorer::CVE_CPE23_VALID_REGEX_STR;
+use cpe_explorer::{NVD_CPE23_VALID_REGEX_STR, CVE_CPE23_VALID_REGEX_STR};
 
 fn main() {
-    let cpe23_valid_regex = Regex::new(CVE_CPE23_VALID_REGEX_STR).unwrap();
-    
     let args = Args::parse();
+
+    let cpe23_valid_regex = match args.regex_choice {
+        CpeRegexs::NVD => {Regex::new(NVD_CPE23_VALID_REGEX_STR).unwrap()},
+        CpeRegexs::CVE => {Regex::new(CVE_CPE23_VALID_REGEX_STR).unwrap()},
+    };
+    
     
     //Read in XML
     let input_xml_file = Path::new(&args.dict);
@@ -89,29 +104,47 @@ fn main() {
     // };
 
 
-    let mut results: Vec<_> = match (args.vendor, args.product) {
-        (Some(v), Some(p)) => {
-            cpe_entries.par_iter()
-                .filter(|element| element.has_vendor(&v))
-                .filter(|element| element.has_product(&p))
-                .collect()
-            }
-        (Some(v), None) => {
-            cpe_entries.par_iter()
-                .filter(|element| element.has_vendor(&v))
-                .collect()
-            }
-        (None, Some(p)) => {
-            cpe_entries.par_iter()
-                .filter(|element| element.has_product(&p))
-                .collect()
-            }
-        (_, _) => {
-            cpe_entries.par_iter()
-                .filter(|_element| true)
-                .collect()
-        }
-    };
+    // let mut results: Vec<_> = match (args.vendor, args.product) {
+    //     (Some(v), Some(p)) => {
+    //         cpe_entries.par_iter()
+    //             .filter(|element| element.has_vendor(&v))
+    //             .filter(|element| element.has_product(&p))
+    //             .collect()
+    //         }
+    //     (Some(v), None) => {
+    //         cpe_entries.par_iter()
+    //             .filter(|element| element.has_vendor(&v))
+    //             .collect()
+    //         }
+    //     (None, Some(p)) => {
+    //         cpe_entries.par_iter()
+    //             .filter(|element| element.has_product(&p))
+    //             .collect()
+    //         }
+    //     (_, _) => {
+    //         cpe_entries.par_iter()
+    //             .filter(|_element| true)
+    //             .collect()
+    //     }
+    // };
+
+    let mut results: Vec<_> = cpe_entries.par_iter()
+        .filter( |element| match &args.vendor { 
+            Some(v) => {element.has_vendor(&v)},
+            None => {true},
+        })
+        .filter( |element| match &args.product { 
+            Some(p) => {element.has_product(&p)},
+            None => {true},
+        })
+        .filter( |element| match &args.validate_cpe23 { 
+            Some(true) => {cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==true},
+            Some(false) => {cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==false},
+            _ => {true} //eg. assume all values pass
+        })
+        .collect(); 
+
+
     match args.compress_versions {
         true => {
             results.sort();
@@ -126,8 +159,9 @@ fn main() {
             for res in results.iter() {
                 println!("Matching cpe: {}", res.get_cpe23_name());
                 match args.validate_cpe23 {
-                    true => {println!("\tPasses regex validation: {}", cpe23_valid_regex.is_match(res.get_cpe23_name().as_str()));}
-                    false => {}
+                    Some(true) => {println!("\tPasses regex validation: {}", cpe23_valid_regex.is_match(res.get_cpe23_name().as_str()));},
+                    Some(false) => {},
+                    _ => {}
                 }
             }
         },
