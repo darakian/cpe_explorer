@@ -35,13 +35,9 @@ struct Args {
     #[arg(short='x', long, value_enum, default_value = "nvd", help="Choice of cpe validation regex.")]
     regex_choice: CpeRegexs,
 
-    //Need to differentate print options from filter options
-
     // Compress versions
     #[arg(short='c', long, action, help="Only show unqiue product:vendor combinations")]
     compress_versions: bool,
-
-    // Check cpe23 passes nvd's regex
 
     // Output as json
     #[arg(short, long, action, help="Export cpes in json. Ignores regex validation at the moment")]
@@ -91,42 +87,6 @@ fn main() {
     //         }
     //     }
     // }
-
-    // match args.validate_cpe23 {
-    //     Some(false) => {
-    //         cpe_entries.iter()
-    //             .filter(|element| cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==false)
-    //             .for_each(|element| {
-    //             println!("{}", element.get_cpe23_name());
-    //         });
-    //     },
-    //     _ => {}
-    // };
-
-
-    // let mut results: Vec<_> = match (args.vendor, args.product) {
-    //     (Some(v), Some(p)) => {
-    //         cpe_entries.par_iter()
-    //             .filter(|element| element.has_vendor(&v))
-    //             .filter(|element| element.has_product(&p))
-    //             .collect()
-    //         }
-    //     (Some(v), None) => {
-    //         cpe_entries.par_iter()
-    //             .filter(|element| element.has_vendor(&v))
-    //             .collect()
-    //         }
-    //     (None, Some(p)) => {
-    //         cpe_entries.par_iter()
-    //             .filter(|element| element.has_product(&p))
-    //             .collect()
-    //         }
-    //     (_, _) => {
-    //         cpe_entries.par_iter()
-    //             .filter(|_element| true)
-    //             .collect()
-    //     }
-    // };
 
     let mut results: Vec<_> = cpe_entries.par_iter()
         .filter( |element| match &args.vendor { 
