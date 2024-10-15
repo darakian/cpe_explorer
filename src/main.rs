@@ -20,11 +20,11 @@ struct Args {
     dict: String,
 
     // Vendor name to filter by
-    #[arg(short, long, help="Vendor name to filter on. Lowercase only.")]
+    #[arg(short, long, help="Vendor name to filter on")]
     vendor: Option<String>,
 
     // Product name to filter by
-    #[arg(short, long, help="Product name to filter on. Lowercase only.")]
+    #[arg(short, long, help="Product name to filter on")]
     product: Option<String>,
 
     // Filter by regex validation
@@ -90,11 +90,11 @@ fn main() {
 
     let mut results: Vec<_> = cpe_entries.par_iter()
         .filter( |element| match &args.vendor { 
-            Some(v) => {element.has_vendor(&v)},
+            Some(v) => {element.has_vendor(&v.to_lowercase())},
             None => {true},
         })
         .filter( |element| match &args.product { 
-            Some(p) => {element.has_product(&p)},
+            Some(p) => {element.has_product(&p.to_lowercase())},
             None => {true},
         })
         .filter( |element| match &args.validate_cpe23 { 
