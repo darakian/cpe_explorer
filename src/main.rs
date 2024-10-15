@@ -32,7 +32,7 @@ struct Args {
     validate_cpe23: Option<bool>,
 
     // Pick between the NVD regular expression or the CVE org one.
-    #[arg(short='x', long, value_enum, default_value = "nvd", help="Choice of [\"NVD\", \"CVE\"]. Default: NVD")]
+    #[arg(short='x', long, value_enum, default_value = "nvd", help="Choice of cpe validation regex.")]
     regex_choice: CpeRegexs,
 
     //Need to differentate print options from filter options
