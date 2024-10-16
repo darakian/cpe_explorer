@@ -78,7 +78,7 @@ fn parse_cpe23(cpe23_node: roxmltree::Node) -> Cpe23Entry {
             };
         }
     }
-    
+
     return Cpe23Entry::new(
         Cpe23Name::new(node_cpe23_name),
         node_cpe23_deprecated,
