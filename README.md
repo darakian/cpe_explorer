@@ -43,9 +43,11 @@ Options:
           Export cpes in json
   -h, --help
           Print help
-  ```
+```
 
-Under active development, but usable for filtering along the various cpe23 parts.
+Under active development, but usable for filtering along the various cpe23 parts and by cpe23 status.
+
+## Examples
 filtering by vendor
 ```
 ❯❯❯ cpe_explorer -d official-cpe-dictionary_v2.3-03102024.xml -v nist
