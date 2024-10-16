@@ -6,7 +6,7 @@ pub struct CpeEntry {
     cpe_name: String,
     deprecated: bool,
     deprecated_date: Option<String>,
-    cpe23: Cpe23Entry,
+    pub cpe23: Cpe23Entry,
 }
 
 impl CpeEntry{
@@ -107,6 +107,10 @@ impl Cpe23Entry{
             cpe23_deprecated_by: cpe23_deprecated_by
         }
     }
+
+    pub fn get_cp23_parts(&self) -> (&String, &String, &String, &String, &String, &String, &String, &String) {
+        self.cpe23_name.get_cpe_tuple()
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -164,7 +168,7 @@ impl Cpe23Name {
         (&self.vendor, &self.product)
     }
 
-    fn get_version_tuple(&self) -> (&String, &String, &String, &String, &String, &String, &String, &String) {
+    fn get_cpe_tuple(&self) -> (&String, &String, &String, &String, &String, &String, &String, &String) {
         (&self.version, &self.update, &self.edition, &self.language, &self.sw_edition, &self.target_sw, &self.target_hw, &self.other)
     }
 }
