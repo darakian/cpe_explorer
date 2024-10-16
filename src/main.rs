@@ -114,41 +114,96 @@ fn main() {
 
     let mut results: Vec<_> = cpe_entries.par_iter()
         .filter( |element| match &args.vendor { 
-            Some(vendor) => {element.get_cpe23_parts().vendor == vendor.to_lowercase()},
+            Some(vendor) => {
+                match vendor.starts_with("!") {
+                    false => {element.get_cpe23_parts().vendor == vendor.to_lowercase()}
+                    true => {element.get_cpe23_parts().vendor != vendor.strip_prefix("!").unwrap().to_lowercase()}
+                }
+            },
             None => {true},
         })
         .filter( |element| match &args.product { 
-            Some(product) => {element.get_cpe23_parts().product == product.to_lowercase()},
+            Some(product) => {
+                match product.starts_with("!") {
+                    false => {element.get_cpe23_parts().product == product.to_lowercase()}
+                    true => {element.get_cpe23_parts().product != product.strip_prefix("!").unwrap().to_lowercase()}
+                }
+            },
             None => {true},
         })
         .filter( |element| match &args.version { 
-            Some(version) => {element.get_cpe23_parts().version == version.to_lowercase()},
+            Some(version) => {
+                match version.starts_with("!") {
+                    false => {element.get_cpe23_parts().version == version.to_lowercase()}
+                    true => {element.get_cpe23_parts().version != version.strip_prefix("!").unwrap().to_lowercase()}
+                }
+            },
             None => {true},
         })
         .filter( |element| match &args.update { 
-            Some(update) => {element.get_cpe23_parts().update == update.to_lowercase()},
+            Some(update) => {
+                match update.starts_with("!") {
+                    false => {element.get_cpe23_parts().update == update.to_lowercase()}
+                    true => {element.get_cpe23_parts().update != update.strip_prefix("!").unwrap().to_lowercase()}
+                }
+            },
             None => {true},
         })
         .filter( |element| match &args.edition { 
-            Some(edition) => {element.get_cpe23_parts().edition == edition.to_lowercase()},
+            Some(edition) => {
+                match edition.starts_with("!") {
+                    false => {element.get_cpe23_parts().edition == edition.to_lowercase()}
+                    true => {element.get_cpe23_parts().edition != edition.strip_prefix("!").unwrap().to_lowercase()}
+                }
+            },
             None => {true},
         })
         .filter( |element| match &args.language { 
-            Some(language) => {element.get_cpe23_parts().language == language.to_lowercase()},
+            Some(language) => {
+                match language.starts_with("!") {
+                    false => {element.get_cpe23_parts().language == language.to_lowercase()}
+                    true => {element.get_cpe23_parts().language != language.strip_prefix("!").unwrap().to_lowercase()}
+                }
+            },
             None => {true},
         })
         .filter( |element| match &args.sw_edition { 
-            Some(sw_edition) => {element.get_cpe23_parts().sw_edition == sw_edition.to_lowercase()},
+            Some(sw_edition) => {
+                match sw_edition.starts_with("!") {
+                    false => {element.get_cpe23_parts().sw_edition == sw_edition.to_lowercase()}
+                    true => {element.get_cpe23_parts().sw_edition != sw_edition.strip_prefix("!").unwrap().to_lowercase()}
+                }
+            },
             None => {true},
         })
         .filter( |element| match &args.target_sw { 
-            Some(target_sw) => {element.get_cpe23_parts().target_sw == target_sw.to_lowercase()},
+            Some(target_sw) => {
+                match target_sw.starts_with("!") {
+                    false => {element.get_cpe23_parts().target_sw == target_sw.to_lowercase()}
+                    true => {element.get_cpe23_parts().target_sw != target_sw.strip_prefix("!").unwrap().to_lowercase()}
+                }
+            },
             None => {true},
         })
         .filter( |element| match &args.target_hw { 
-            Some(target_hw) => {element.get_cpe23_parts().target_hw == target_hw.to_lowercase()},
+            Some(target_hw) => {
+                match target_hw.starts_with("!") {
+                    false => {element.get_cpe23_parts().target_hw == target_hw.to_lowercase()}
+                    true => {element.get_cpe23_parts().target_hw != target_hw.strip_prefix("!").unwrap().to_lowercase()}
+                }
+            },
             None => {true},
         })
+        .filter( |element| match &args.other { 
+            Some(other) => {
+                match other.starts_with("!") {
+                    false => {element.get_cpe23_parts().other == other.to_lowercase()}
+                    true => {element.get_cpe23_parts().other != other.strip_prefix("!").unwrap().to_lowercase()}
+                }
+            },
+            None => {true},
+        })
+        // Non-CPE string field filters
         .filter( |element| match &args.validate_cpe23 { 
             Some(true) => {cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==true},
             Some(false) => {cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==false},
