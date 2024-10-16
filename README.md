@@ -40,7 +40,7 @@ Options:
   -c, --compress-versions
           Only show unqiue product:vendor combinations
   -j, --json-out
-          Export cpes in json.
+          Export cpes in json
   -h, --help
           Print help
   ```
