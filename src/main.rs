@@ -112,6 +112,7 @@ fn main() {
         .map(|entry| parse_cpe_node(entry))
         .collect();
 
+    // Filter results based on user input 
     let mut results: Vec<_> = cpe_entries.par_iter()
         .filter( |element| match &args.vendor { 
             Some(vendor) => {
