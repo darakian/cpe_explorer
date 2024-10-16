@@ -6,7 +6,7 @@ pub struct CpeEntry {
     cpe_name: String,
     deprecated: bool,
     deprecated_date: Option<String>,
-    cpe23: Cpe23Entry,
+    pub cpe23: Cpe23Entry,
 }
 
 impl CpeEntry{
@@ -39,34 +39,14 @@ impl CpeEntry{
         self.deprecated
     }
 
-    pub fn has_name(&self, name: &String) -> bool {
-        name == self.get_names().0 || name == self.get_names().0
-    }
-
-    pub fn has_vendor(&self, vendor_name: &String) -> bool {
-        self.cpe23.cpe23_name.vendor == *vendor_name
-    }
-
-    pub fn get_vendor(&self) -> &String {
-        &self.cpe23.cpe23_name.vendor
-    }
-
-    pub fn has_product(&self, product_name: &String) -> bool {
-        self.cpe23.cpe23_name.product == *product_name
-    }
-
-    pub fn get_product(&self) -> &String {
-        &self.cpe23.cpe23_name.product
-    }
-
-    pub fn get_vendor_product(&self) -> (&String, &String) {
-        self.cpe23.cpe23_name.get_vendor_product_tuple()
+    pub fn get_cpe23_parts(&self) -> &Cpe23Name {
+        self.cpe23.get_cp23_parts()
     }
 }
 
 impl PartialEq for CpeEntry {
     fn eq(&self, other: &CpeEntry) -> bool {
-        self.get_vendor_product() == other.get_vendor_product()
+        self.get_cpe23_parts().vendor == other.get_cpe23_parts().vendor
     }
 }
 
@@ -107,22 +87,26 @@ impl Cpe23Entry{
             cpe23_deprecated_by: cpe23_deprecated_by
         }
     }
+
+    fn get_cp23_parts(&self) -> &Cpe23Name {
+        &self.cpe23_name
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Cpe23Name {
-    cpe_version: String,
-    part: String,
-    vendor: String,
-    product: String,
-    version: String,
-    update: String,
-    edition: String,
-    language: String,
-    sw_edition: String,
-    target_sw: String,
-    target_hw: String,
-    other: String,
+    pub cpe_version: String,
+    pub part: String,
+    pub vendor: String,
+    pub product: String,
+    pub version: String,
+    pub update: String,
+    pub edition: String,
+    pub language: String,
+    pub sw_edition: String,
+    pub target_sw: String,
+    pub target_hw: String,
+    pub other: String,
 }
 
 impl Cpe23Name {
@@ -164,9 +148,6 @@ impl Cpe23Name {
         (&self.vendor, &self.product)
     }
 
-    fn get_version_tuple(&self) -> (&String, &String, &String, &String, &String, &String, &String, &String) {
-        (&self.version, &self.update, &self.edition, &self.language, &self.sw_edition, &self.target_sw, &self.target_hw, &self.other)
-    }
 }
 
 impl PartialEq for Cpe23Name {

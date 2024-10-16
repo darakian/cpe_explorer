@@ -13,7 +13,7 @@ enum CpeRegexs {
 
 
 #[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
+#[command(about)]
 struct Args {
     /// Path to cpe dictionary xml
     #[arg(short='d', long)]
@@ -26,6 +26,38 @@ struct Args {
     // Product name to filter by
     #[arg(short='p', long, help="Product name to filter on")]
     product: Option<String>,
+
+    // Version to filter by
+    #[arg(short='V', long, help="Version to filter on")]
+    version: Option<String>,
+
+    // Update to filter by
+    #[arg(short='u', long, help="Update to filter on")]
+    update: Option<String>,
+
+    // Edition to filter by
+    #[arg(short='e', long, help="Edition to filter on")]
+    edition: Option<String>,
+
+    // Language to filter by
+    #[arg(short='l', long, help="Language to filter on")]
+    language: Option<String>,
+
+    // Software edition to filter by
+    #[arg(short='s', long, help="Software edition to filter on")]
+    sw_edition: Option<String>,
+
+    // Target Software to filter by
+    #[arg(short='S', long, help="Target software (eg. environment) to filter on")]
+    target_sw: Option<String>,
+
+    // Target hardware to filter by
+    #[arg(short='h', long, help="Target hardware (eg. environment) to filter on")]
+    target_hw: Option<String>,
+
+    // Other to filter by
+    #[arg(short='o', long, help="'Other' to filter on")]
+    other: Option<String>,
 
     // Filter by regex validation
     #[arg(short='r', long, action, help="Validate cpe strings against NVD's validation regex")]
@@ -82,11 +114,39 @@ fn main() {
 
     let mut results: Vec<_> = cpe_entries.par_iter()
         .filter( |element| match &args.vendor { 
-            Some(v) => {element.has_vendor(&v.to_lowercase())},
+            Some(vendor) => {element.get_cpe23_parts().vendor == vendor.to_lowercase()},
             None => {true},
         })
         .filter( |element| match &args.product { 
-            Some(p) => {element.has_product(&p.to_lowercase())},
+            Some(product) => {element.get_cpe23_parts().product == product.to_lowercase()},
+            None => {true},
+        })
+        .filter( |element| match &args.version { 
+            Some(version) => {element.get_cpe23_parts().version == version.to_lowercase()},
+            None => {true},
+        })
+        .filter( |element| match &args.update { 
+            Some(update) => {element.get_cpe23_parts().update == update.to_lowercase()},
+            None => {true},
+        })
+        .filter( |element| match &args.edition { 
+            Some(edition) => {element.get_cpe23_parts().edition == edition.to_lowercase()},
+            None => {true},
+        })
+        .filter( |element| match &args.language { 
+            Some(language) => {element.get_cpe23_parts().language == language.to_lowercase()},
+            None => {true},
+        })
+        .filter( |element| match &args.sw_edition { 
+            Some(sw_edition) => {element.get_cpe23_parts().sw_edition == sw_edition.to_lowercase()},
+            None => {true},
+        })
+        .filter( |element| match &args.target_sw { 
+            Some(target_sw) => {element.get_cpe23_parts().target_sw == target_sw.to_lowercase()},
+            None => {true},
+        })
+        .filter( |element| match &args.target_hw { 
+            Some(target_hw) => {element.get_cpe23_parts().target_hw == target_hw.to_lowercase()},
             None => {true},
         })
         .filter( |element| match &args.validate_cpe23 { 
