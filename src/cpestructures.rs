@@ -112,20 +112,21 @@ pub struct Cpe23Name {
 
 impl Cpe23Name {
     pub fn new (cpe_string: &str) -> Self {
+        let cpe_string = cpe_string.replace("\\:","🦞");
         let cpe_parts = cpe_string.split(':').collect::<Vec<_>>();
         Cpe23Name {
-            cpe_version: cpe_parts[1].to_string(),
-            part: cpe_parts[2].to_string(),
-            vendor: cpe_parts[3].to_string(),
-            product: cpe_parts[4].to_string(),
-            version: cpe_parts[5].to_string(),
-            update: cpe_parts[6].to_string(),
-            edition: cpe_parts[7].to_string(),
-            language: cpe_parts[8].to_string(),
-            sw_edition: cpe_parts[9].to_string(),
-            target_sw: cpe_parts[10].to_string(),
-            target_hw: cpe_parts[11].to_string(),
-            other: cpe_parts[12].to_string(),
+            cpe_version: cpe_parts[1].replace("🦞", ":"),
+            part: cpe_parts[2].replace("🦞", ":"),
+            vendor: cpe_parts[3].replace("🦞", ":"),
+            product: cpe_parts[4].replace("🦞", ":"),
+            version: cpe_parts[5].replace("🦞", ":"),
+            update: cpe_parts[6].replace("🦞", ":"),
+            edition: cpe_parts[7].replace("🦞", ":"),
+            language: cpe_parts[8].replace("🦞", ":"),
+            sw_edition: cpe_parts[9].replace("🦞", ":"),
+            target_sw: cpe_parts[10].replace("🦞", ":"),
+            target_hw: cpe_parts[11].replace("🦞", ":"),
+            other: cpe_parts[12].replace("🦞", ":"),
         }
     }
 
