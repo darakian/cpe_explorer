@@ -13,7 +13,7 @@ enum CpeRegexs {
 
 
 #[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
+#[command(about)]
 struct Args {
     /// Path to cpe dictionary xml
     #[arg(short='d', long)]
@@ -26,6 +26,38 @@ struct Args {
     // Product name to filter by
     #[arg(short='p', long, help="Product name to filter on")]
     product: Option<String>,
+
+    // Version to filter by
+    #[arg(short='V', long, help="Version to filter on")]
+    version: Option<String>,
+
+    // Update to filter by
+    #[arg(short='u', long, help="Update to filter on")]
+    update: Option<String>,
+
+    // Edition to filter by
+    #[arg(short='e', long, help="Edition to filter on")]
+    edition: Option<String>,
+
+    // Language to filter by
+    #[arg(short='l', long, help="Language to filter on")]
+    language: Option<String>,
+
+    // Software edition to filter by
+    #[arg(short='s', long, help="Software edition to filter on")]
+    software_edition: Option<String>,
+
+    // Target Software to filter by
+    #[arg(short='S', long, help="Target software (eg. environment) to filter on")]
+    target_software: Option<String>,
+
+    // Target hardware to filter by
+    #[arg(short='h', long, help="Target hardware (eg. environment) to filter on")]
+    target_hardware: Option<String>,
+
+    // Other to filter by
+    #[arg(short='o', long, help="'Other' to filter on")]
+    other: Option<String>,
 
     // Filter by regex validation
     #[arg(short='r', long, action, help="Validate cpe strings against NVD's validation regex")]
