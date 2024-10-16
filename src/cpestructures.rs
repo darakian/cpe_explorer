@@ -39,30 +39,6 @@ impl CpeEntry{
         self.deprecated
     }
 
-    pub fn has_name(&self, name: &String) -> bool {
-        name == self.get_names().0 || name == self.get_names().0
-    }
-
-    pub fn has_vendor(&self, vendor_name: &String) -> bool {
-        self.cpe23.cpe23_name.vendor == *vendor_name
-    }
-
-    pub fn get_vendor(&self) -> &String {
-        &self.cpe23.cpe23_name.vendor
-    }
-
-    pub fn has_product(&self, product_name: &String) -> bool {
-        self.cpe23.cpe23_name.product == *product_name
-    }
-
-    pub fn get_product(&self) -> &String {
-        &self.cpe23.cpe23_name.product
-    }
-
-    pub fn get_vendor_product(&self) -> (&String, &String) {
-        self.cpe23.cpe23_name.get_vendor_product_tuple()
-    }
-
     pub fn get_cpe23_parts(&self) -> &Cpe23Name {
         self.cpe23.get_cp23_parts()
     }
@@ -70,7 +46,7 @@ impl CpeEntry{
 
 impl PartialEq for CpeEntry {
     fn eq(&self, other: &CpeEntry) -> bool {
-        self.get_vendor_product() == other.get_vendor_product()
+        self.get_cpe23_parts().vendor == other.get_cpe23_parts().vendor
     }
 }
 
