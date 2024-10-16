@@ -63,7 +63,7 @@ Matching cpe: "cpe:2.3:a:cve:cve-services:1.1.1:*:*:*:*:*:*:*"
 ```
 or a vendor but not a specific product
 ```
-❯❯❯ cpe_explorer -d ~/Documents/CPE/official-cpe-dictionary_v2.3-09102024.xml.gz -v mitre -p !caldera
+❯❯❯ cpe_explorer -d official-cpe-dictionary_v2.3-09102024.xml -v mitre -p !caldera
 Matching cpe: cpe:2.3:a:mitre:cve_services:1.1.1:*:*:*:*:node.js:*:*
 Matching cpe: cpe:2.3:a:mitre:risk_radar:1.0.0:*:*:*:*:*:*:*
 ```
