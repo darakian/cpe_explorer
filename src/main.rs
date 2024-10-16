@@ -203,6 +203,7 @@ fn main() {
             },
             None => {true},
         })
+        // Non-CPE string field filters
         .filter( |element| match &args.validate_cpe23 { 
             Some(true) => {cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==true},
             Some(false) => {cpe23_valid_regex.is_match(element.get_cpe23_name().as_str())==false},
