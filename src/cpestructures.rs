@@ -46,7 +46,8 @@ impl CpeEntry{
 
 impl PartialEq for CpeEntry {
     fn eq(&self, other: &CpeEntry) -> bool {
-        self.get_cpe23_parts().vendor == other.get_cpe23_parts().vendor
+        (self.get_cpe23_parts().vendor == other.get_cpe23_parts().vendor) &&
+        self.get_cpe23_parts().product == other.get_cpe23_parts().product
     }
 }
 
